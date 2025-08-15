@@ -1,0 +1,152 @@
+# version: '3.8'
+
+# services:
+#   # SQLite Database (Free alternative to PostgreSQL)
+#   # We'll use SQLite file-based database instead of PostgreSQL
+#   # No separate container needed - n8n will handle SQLite directly
+
+#   # n8n Automation Engine
+#   n8n:
+#     image: n8nio/n8n:latest
+#     container_name: automation_hub_n8n
+#     restart: unless-stopped
+#     environment:
+#       # Basic Configuration
+#       - N8N_BASIC_AUTH_ACTIVE=true
+#       - N8N_BASIC_AUTH_USER=admin
+#       - N8N_BASIC_AUTH_PASSWORD=admin123
+      
+#       # Database Configuration (SQLite - Free)
+#       - DB_TYPE=sqlite
+#       - DB_SQLITE_DATABASE=/home/node/.n8n/database.sqlite
+      
+#       # Webhook Configuration
+#       - WEBHOOK_URL=http://localhost:5678
+#       - N8N_METRICS=true
+      
+#       # Free AI Integration Environment Variables
+#       - GROQ_API_KEY=${GROQ_API_KEY}  # Free AI alternative
+#       - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}  # Free AI models
+      
+#       # Free Email Integration (EmailJS)
+#       - EMAILJS_SERVICE_ID=${EMAILJS_SERVICE_ID}
+#       - EMAILJS_TEMPLATE_ID=${EMAILJS_TEMPLATE_ID}
+#       - EMAILJS_PUBLIC_KEY=${EMAILJS_PUBLIC_KEY}
+      
+#       # Free Notification Integration (Discord Webhook)
+#       - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      
+#     volumes:
+#       - n8n_data:/home/node/.n8n
+#       - ./workflows:/home/node/.n8n/workflows
+#       - ./credentials:/home/node/.n8n/credentials
+#     ports:
+#       - "5678:5678"
+#     depends_on:
+#       - postgres
+#     networks:
+#       - automation_network
+
+#   # Backend API (Node.js/Express)
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     container_name: automation_hub_backend
+#     restart: unless-stopped
+#     environment:
+#       - NODE_ENV=development
+#       - PORT=3001
+#       - DATABASE_URL=sqlite:./data/automation_hub.db
+#       - N8N_WEBHOOK_URL=http://n8n:5678/webhook
+#       - JWT_SECRET=your_jwt_secret_key
+#     volumes:
+#       - ./backend:/app
+#       - /app/node_modules
+#     ports:
+#       - "3001:3001"
+#     depends_on:
+#       - n8n
+#     networks:
+#       - automation_network
+
+#   # Frontend (React)
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     container_name: automation_hub_frontend
+#     restart: unless-stopped
+#     environment:
+#       - REACT_APP_API_URL=http://localhost:3001
+#       - REACT_APP_N8N_URL=http://localhost:5678
+#     volumes:
+#       - ./frontend:/app
+#       - /app/node_modules
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       - backend
+#     networks:
+#       - automation_network
+
+#   # Remove Redis - use simple file-based storage instead
+
+# volumes:
+#   n8n_data:
+
+# networks:
+#   automation_network:
+#     driver: bridge
+
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: automation_hub_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook/ai-task
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      - n8n
+    networks:
+      - automation_network
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: automation_hub_n8n
+    restart: unless-stopped
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: admin123
+      DB_TYPE: sqlite
+      DB_SQLITE_DATABASE: /home/node/.n8n/database.sqlite
+      WEBHOOK_URL: http://localhost:5678
+      N8N_METRICS: "true"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workflows:/home/node/.n8n/workflows
+      - ./credentials:/home/node/.n8n/credentials
+    ports:
+      - "5678:5678"
+    networks:
+      - automation_network
+
+volumes:
+  n8n_data:
+
+networks:
+  automation_network:
+    driver: bridge
