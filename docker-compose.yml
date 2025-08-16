@@ -100,8 +100,6 @@
 #     driver: bridge
 
 
-version: '3.8'
-
 services:
   backend:
     build:
@@ -143,6 +141,26 @@ services:
       - "5678:5678"
     networks:
       - automation_network
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: automation_hub_frontend   # ✅ Correct level
+    restart: unless-stopped                   # ✅ Correct level
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - automation_network
+
+
 
 volumes:
   n8n_data:

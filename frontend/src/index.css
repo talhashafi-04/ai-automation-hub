@@ -1,0 +1,99 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Custom styles for the AI Task Assistant */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Loading animation for the Clock icon */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Custom gradient background */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+/* Hover effects for file upload */
+.file-upload-hover:hover {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
+
+/* Success pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom form focus styles */
+.form-input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: #3b82f6;
+  border-color: transparent;
+}
+
+/* Button hover effects */
+.btn-primary:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Status message animations */
+.status-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.status-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* File upload drag and drop styles */
+.file-drop-zone {
+  transition: all 0.3s ease;
+}
+
+.file-drop-zone.drag-over {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  border-style: solid;
+}

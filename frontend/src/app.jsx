@@ -92,6 +92,7 @@ export default function AITaskAssistant() {
 
         {/* Main Form */}
         <div className="bg-white rounded-xl shadow-lg p-8">
+          <form onSubmit={handleSubmit}>
           <div className="space-y-6">
             {/* Basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -206,6 +207,7 @@ export default function AITaskAssistant() {
               <span>{message}</span>
             </div>
           )}
+          </form>
         </div>
 
         {/* Info Section */}
